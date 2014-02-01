@@ -19,7 +19,8 @@ pText = pMunch notNewline
 		notNewline c = c /= '\r' && c /= '\n'
 
 pNewline :: Parser String
-pNewline = (\l r -> [l, r]) <$> pCR <*> pLF
+pNewline = (\l r -> [l, r]) <$> pCR <*> pLF <<|>
+	(:[]) <$> (pCR <|> pLF)
 
 pEvent :: Parser Event
 pEvent = Event <$

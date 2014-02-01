@@ -7,7 +7,6 @@ import Data.Maybe
 import CalendarTypes
 import DateTypes
 import EventTypes
-import Printing
 
 
 -- Test:
