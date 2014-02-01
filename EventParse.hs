@@ -2,7 +2,6 @@ module EventParse where
 import DateParse
 import EventTypes
 import ParseLib.Abstract
-import ParserExtend
 
 pEvent :: Parser Char Event
 pEvent = Event <$

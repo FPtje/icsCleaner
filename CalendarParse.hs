@@ -2,7 +2,6 @@ module CalendarParse where
 import EventParse
 import CalendarTypes
 import ParseLib.Abstract
-import ParserExtend
 
 parseCalendar :: Parser Char Calendar
 parseCalendar =	Calendar <$ token "BEGIN:VCALENDAR"		<*	pNewline	<*>
