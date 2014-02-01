@@ -12,6 +12,7 @@ data EventProp  = DtStamp DateTime
                 | Summary String
                 | Location String                       
                 | Organizer String
+                | Class String
                 | Priority Int
                 deriving (Eq, Show)
 
@@ -48,13 +49,14 @@ type EventPropAlgebra ep dt date time utc =
             String -> ep,
             String -> ep,
             String -> ep,
+            String -> ep,
             Int    -> ep
         ),
         DateTimeAlgebra dt date time utc
     )
 
 foldEventProp :: EventPropAlgebra ep dt date time utc -> EventProp -> ep
-foldEventProp ((dtStamp, uid, dtStart, dtEnd, descr, summary, location, organizer, priority), datetime) = fold
+foldEventProp ((dtStamp, uid, dtStart, dtEnd, descr, summary, location, organizer, clss, priority), datetime) = fold
     where
         fold (DtStamp dt)       = dtStamp (foldDateTime datetime dt)
         fold (Uid str)          = uid str
@@ -64,12 +66,13 @@ foldEventProp ((dtStamp, uid, dtStart, dtEnd, descr, summary, location, organize
         fold (Summary str)      = summary str
         fold (Location str)     = location str
         fold (Organizer str)    = organizer str
+        fold (Class str)        = clss str
         fold (Priority num)     = priority num
 
 idEventProp :: EventPropAlgebra EventProp DateTime Date Time TimeUTC
 idEventProp = (
         (
-            DtStamp, Uid, DtStart, DtEnd, Description, Summary, Location, Organizer, Priority
+            DtStamp, Uid, DtStart, DtEnd, Description, Summary, Location, Organizer, Class, Priority
         ),
         idDateTime
     )
