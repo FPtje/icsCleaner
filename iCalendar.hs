@@ -6,6 +6,7 @@ import CalendarTypes
 import CalendarParse
 import DateTypes
 import EventTypes
+import AntiDuplicate
 import Text.ParserCombinators.UU.Utils
 import Text.ParserCombinators.UU.BasicInstances
 
