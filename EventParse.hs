@@ -36,4 +36,5 @@ pEventProp = DtStamp 	<$ pToken "DTSTAMP:"		<*> parseDateTime	<* pNewline <|>
 	Description			<$ pToken "DESCRIPTION:"	<*> pText			<* pNewline <|>
 	Summary				<$ pToken "SUMMARY:"		<*> pText			<* pNewline <|>
 	Location			<$ pToken "LOCATION:"		<*> pText			<* pNewline <|>
-	Organizer			<$ pToken "ORGANIZER:"		<*> pText			<* pNewline
+	Organizer			<$ pToken "ORGANIZER:"		<*> pText			<* pNewline <|>
+	Priority			<$ pToken "PRIORITY:"		<*> pDigitAsNum 	<* pNewline
