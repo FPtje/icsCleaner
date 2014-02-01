@@ -57,8 +57,13 @@ main = do
 	contents <- readFile (head args)
 	let (cal, err) = execParser parseCalendar contents
 
-	putStrLn "Parse errors:"
+	putStrLn $ (show (length err)) ++ " parsing errors"
 	show_errors err
+
+	putStrLn "Attempting to output result to output.ics"
 
 	let noDup = foldCalendar antiDuplicate cal
 	writeFile "output.ics" (showCalendar noDup)
+
+	putStrLn "Output written"
+	return ()
