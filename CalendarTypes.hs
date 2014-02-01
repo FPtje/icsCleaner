@@ -6,7 +6,9 @@ import EventTypes
 data Calendar   = Calendar [Calprop] [Event]            deriving (Eq)
 
 data Calprop    = Version
-                | Prodid String                         deriving (Eq)
+                | Prodid String
+                | Method String
+                deriving (Eq)
 
 {-
 	Algebras and folds
@@ -29,17 +31,18 @@ idCalendar :: CalendarAlgebra Calendar Calprop Event EventProp DateTime Date Tim
 idCalendar = (Calendar, idCalProp, idEvent)
 
 -- Calendar property
-type CalpropAlgebra c = (c, String -> c)
+type CalpropAlgebra c = (c, String -> c, String -> c)
 
 foldCalprop :: CalpropAlgebra c -> Calprop -> c
-foldCalprop (v, p) = fold
+foldCalprop (v, p, m) = fold
 	where
 		fold Version = v
 		fold (Prodid str) = p str
+		fold (Method str) = m str
 
 -- id for Calendar property
 idCalProp :: CalpropAlgebra Calprop
-idCalProp = (Version, Prodid)
+idCalProp = (Version, Prodid, Method)
 
 {-
 	Instances
@@ -50,6 +53,7 @@ instance Show Calendar where
 instance Show Calprop where
     show Version   = "VERSION:2.0\r\n"
     show (Prodid s)= "PRODID:" ++ s ++ "\r\n"
+    show (Method s)= "METHOD:" ++ s ++ "\r\n"
 
 -- Convert a Calendar to a string
 printCalendar :: Calendar -> String

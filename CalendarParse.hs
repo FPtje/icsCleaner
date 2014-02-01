@@ -20,5 +20,6 @@ parseCalendar =	Calendar <$ pToken "BEGIN:VCALENDAR"	<*	pNewline	<*>
 				pToken "END:VCALENDAR" 					<* pNewline
 
 pCalprop :: Parser Calprop
-pCalprop = 	Version	<$ pToken "VERSION:2.0"	<*	pNewline 	<|>
-			Prodid	<$ pToken "PRODID:"		<*> pText 		<* pNewline
+pCalprop = 	Version	<$ pToken "VERSION:2.0"	<*	pNewline 				<|>
+			Prodid	<$ pToken "PRODID:"		<*> pText 		<* pNewline <|>
+			Method	<$ pToken "METHOD:"		<*> pText 		<* pNewline
