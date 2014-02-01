@@ -1,19 +1,37 @@
+{-# LANGUAGE  FlexibleInstances,
+              TypeSynonymInstances,
+              MultiParamTypeClasses,
+              Rank2Types, FlexibleContexts, NoMonomorphismRestriction,
+              CPP  #-}
+
 module EventParse where
-import DateParse
+import Text.ParserCombinators.UU
+import Text.ParserCombinators.UU.Utils
+import Text.ParserCombinators.UU.BasicInstances
+import Text.ParserCombinators.UU.Derived
+
 import EventTypes
-import ParseLib.Abstract
+import DateParse
 
-pEvent :: Parser Char Event
+pText :: Parser String
+pText = pMunch notNewline
+	where
+		notNewline c = c /= '\r' && c /= '\n'
+
+pNewline :: Parser String
+pNewline = (\l r -> [l, r]) <$> pCR <*> pLF
+
+pEvent :: Parser Event
 pEvent = Event <$
-	token "BEGIN:VEVENT"	<* pNewline <*>
-	greedy1 pEventProp		<*
-	token "END:VEVENT"		<* pNewline
+	pToken "BEGIN:VEVENT"	<* pNewline <*>
+	pSome  pEventProp		<*
+	pToken "END:VEVENT"		<* pNewline
 
-pEventProp :: Parser Char EventProp
-pEventProp = DtStamp 	<$ token "DTSTAMP:"		<*> parseDateTime	<* pNewline <|>
-	Uid					<$ token "UID:"			<*> pText			<* pNewline <|>
-	DtStart				<$ token "DTSTART:"		<*> parseDateTime	<* pNewline <|>
-	DtEnd				<$ token "DTEND:"		<*> parseDateTime	<* pNewline <|>
-	Description			<$ token "DESCRIPTION:"	<*> pText			<* pNewline <|>
-	Summary				<$ token "SUMMARY:"		<*> pText			<* pNewline <|>
-	Location			<$ token "LOCATION:"	<*> pText			<* pNewline
+pEventProp :: Parser EventProp
+pEventProp = DtStamp 	<$ pToken "DTSTAMP:"		<*> parseDateTime	<* pNewline <|>
+	Uid					<$ pToken "UID:"			<*> pText			<* pNewline <|>
+	DtStart				<$ pToken "DTSTART:"		<*> parseDateTime	<* pNewline <|>
+	DtEnd				<$ pToken "DTEND:"			<*> parseDateTime	<* pNewline <|>
+	Description			<$ pToken "DESCRIPTION:"	<*> pText			<* pNewline <|>
+	Summary				<$ pToken "SUMMARY:"		<*> pText			<* pNewline <|>
+	Location			<$ pToken "LOCATION:"		<*> pText			<* pNewline
