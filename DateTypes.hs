@@ -43,3 +43,11 @@ foldDateTime (datetime, date, time, utc) = fold
 
 idDateTime :: DateTimeAlgebra DateTime Date Time TimeUTC
 idDateTime = (DateTime, Date, Time, id)
+
+strDateTime :: DateTimeAlgebra String String String String
+strDateTime = (
+	\d t -> d ++ "t" ++ t,
+	\yy mm dd -> (show yy) ++ (show mm) ++ (show dd),
+	\h m s u -> (show h) ++ (show m) ++ (show s) ++ u,
+	\u -> if u == UTC then "Z" else ""
+	)
