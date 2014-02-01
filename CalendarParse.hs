@@ -17,7 +17,7 @@ parseCalendar :: Parser Calendar
 parseCalendar =	Calendar <$ pToken "BEGIN:VCALENDAR"	<*	pNewline	<*>
 				pSome pCalprop 						    <*>
 				pMany pEvent            				<*
-				pToken "END:VCALENDAR" 					<* pNewline
+				pToken "END:VCALENDAR" 					<* opt pNewline ""
 
 pCalprop :: Parser Calprop
 pCalprop = 	Version	<$ pToken "VERSION:2.0"	<*	pNewline 				<|>
