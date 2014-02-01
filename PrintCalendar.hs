@@ -53,8 +53,8 @@ prettyCalendar = (
  ) where
     fCalendar    props evs   = text "BEGIN:VCALENDAR" $$ vcat props $$ vcat evs $$ text "END:VCALENDAR"
     fVersion                 = text "VERSION:2.0"
-    fProdid      val         = text "PRODID:" <> pr val
-    fMethod      val         = text "METHOD:" <> pr val
+    fProdid      val         = text "PRODID:" <> text val
+    fMethod      val         = text "METHOD:" <> text val
     fEvent       eps         = text "BEGIN:VEVENT" $$ vcat eps $$ text "END:VEVENT"
     fDtStamp     val         = text "DTSTAMP:"     <> val
     fUid         val         = text "UID:"         <> text val
