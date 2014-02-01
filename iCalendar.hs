@@ -1,6 +1,8 @@
 module Main where
 import System.IO
 import Data.Maybe
+import System.Environment
+import System.FilePath
 
 import CalendarTypes
 import CalendarParse
@@ -47,4 +49,16 @@ readCalendar path = do
 	let res = execParser parseCalendar contents
 	return res
 
-main = putStr ""
+show_errors = sequence_ . (map (putStrLn . show))
+
+main = do
+	-- get command line arguments
+	args  <- getArgs
+	contents <- readFile (head args)
+	let (cal, err) = execParser parseCalendar contents
+
+	putStrLn "Parse errors:"
+	show_errors err
+
+	let noDup = foldCalendar antiDuplicate cal
+	writeFile "output.ics" (showCalendar noDup)
