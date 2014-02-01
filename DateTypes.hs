@@ -34,11 +34,12 @@ instance Show TimeUTC where
 --
 -- DateTime
 --
-type DateTimeAlgebra dt date time utc = (date -> time -> dt, Year -> Month -> Day -> date, Hour -> Minute -> Second -> utc -> time, utc)
+type DateTimeAlgebra dt date time utc = (date -> time -> dt, Year -> Month -> Day -> date, Hour -> Minute -> Second -> utc -> time, TimeUTC -> utc)
 
 foldDateTime (datetime, date, time, utc) = fold
 	where
 
 		fold (DateTime (Date yy mm dd) (Time h m s u)) = datetime (date yy mm dd) (time h m s (utc u))
 
-
+idDateTime :: DateTimeAlgebra DateTime Date Time TimeUTC
+idDateTime = (DateTime, Date, Time, id)
