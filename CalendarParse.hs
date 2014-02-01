@@ -1,14 +1,24 @@
+{-# LANGUAGE  FlexibleInstances,
+              TypeSynonymInstances,
+              MultiParamTypeClasses,
+              Rank2Types, FlexibleContexts, NoMonomorphismRestriction,
+              CPP  #-}
+
 module CalendarParse where
+import Text.ParserCombinators.UU
+import Text.ParserCombinators.UU.Utils
+import Text.ParserCombinators.UU.BasicInstances
+import Text.ParserCombinators.UU.Derived
+
 import EventParse
 import CalendarTypes
-import ParseLib.Abstract
 
-parseCalendar :: Parser Char Calendar
-parseCalendar =	Calendar <$ token "BEGIN:VCALENDAR"		<*	pNewline	<*>
-				greedy1 pCalprop 						<*>
-				greedy pEvent <*
-				token "END:VCALENDAR" <* pNewline
+parseCalendar :: Parser Calendar
+parseCalendar =	Calendar <$ pToken "BEGIN:VCALENDAR"	<*	pNewline	<*>
+				pSome pCalprop 						    <*>
+				pMany pEvent            				<*
+				pToken "END:VCALENDAR" 					<* pNewline
 
-pCalprop :: Parser Char Calprop
-pCalprop = 	Version	<$ token "VERSION:2.0"	<*	pNewline 	<|>
-			Prodid	<$ token "PRODID:"		<*> pText 		<* pNewline
+pCalprop :: Parser Calprop
+pCalprop = 	Version	<$ pToken "VERSION:2.0"	<*	pNewline 	<|>
+			Prodid	<$ pToken "PRODID:"		<*> pText 		<* pNewline
