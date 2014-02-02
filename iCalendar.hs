@@ -28,19 +28,30 @@ readCalendar path = do
 
 show_errors = sequence_ . (map (putStrLn . show))
 
+
+convertCalendar :: String -> (String, [Error LineColPos])
+convertCalendar str = let (cal, err) = execParser parseCalendar str in
+	(showCalendar $ foldCalendar antiDuplicate cal, err)
+
+
 main = do
 	-- get command line arguments
 	args  <- getArgs
-	contents <- readFile (head args)
-	let (cal, err) = execParser parseCalendar contents
+	case args of
+		["-o", "stdout", xs] -> do
+			contents <- readFile xs
+			let (cal, err) = convertCalendar contents
+			putStrLn cal
+		x : xs -> do
+			contents <- readFile x
+			let (cal, err) = convertCalendar contents
 
-	putStrLn $ (show (length err)) ++ " parsing errors"
-	show_errors err
+			putStrLn $ (show (length err)) ++ " parsing errors"
+			show_errors err
 
-	putStrLn "Attempting to output result to output.ics"
+			putStrLn "Attempting to output result to output.ics"
 
-	let noDup = foldCalendar antiDuplicate cal
-	writeFile "output.ics" (showCalendar noDup)
+			writeFile "output.ics" cal
 
-	putStrLn "Output written"
-	return ()
+			putStrLn "Output written"
+			return ()
